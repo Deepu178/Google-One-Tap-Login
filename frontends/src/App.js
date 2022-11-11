@@ -45,7 +45,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Implement "Google One-Tap Login" In React and Node.js</h1>
+        <h1>Implement "Google-One-Tap Login" In React and Node.js</h1>
         <div>
           {loginData ? (
             <div>
