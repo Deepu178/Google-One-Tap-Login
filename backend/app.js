@@ -1,16 +1,38 @@
-//importing required modules
-const express = require('express');
-const server = require('./server');
-const port = process.env.PORT || 5000;
+const express = require("express");
+const dotenv = require("dotenv");
+const { OAuth2Client } = require("google-auth-library");
 
-//creating express app
+dotenv.config();
+const port =  5000;
+const client = new OAuth2Client("114914030611-askhm7c3r7pnhp8b7rq87qbvt8ncb2sb.apps.googleusercontent.com");
+
 const app = express();
+
 app.use(express.json());
 
+const users = [];
 
-//setting up the server
+function upsert(array, item) {
+  const i = array.findIndex((_item) => _item.email === item.email);
+  if (i > -1) array[i] = item;
+  else array.push(item);
+}
 
+app.post("/api/google-login", async (req, res) => {
+  const { token } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: "114914030611-askhm7c3r7pnhp8b7rq87qbvt8ncb2sb.apps.googleusercontent.com",
+  });
 
-//listening to the server
+  const { name, email, picture } = ticket.getPayload();
+  upsert(users, { name, email, picture });
+  res.status(201);
+  res.json({ name, email, picture });
+});
 
-module.exports = app; //exporting the app module  for testing purposes
+app.listen(port, () => {
+  console.log(
+    `Server is ready at http://localhost:${port}`
+  );
+});
