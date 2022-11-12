@@ -13,7 +13,7 @@ const options = {
   context: "signin", 
 };
 
-function App() {
+const App = () => {
   //creating useState hooks
   const [loginData, setLoginData] = useState(
     localStorage.getItem("loginData")
@@ -22,13 +22,16 @@ function App() {
   );
   //creating the useEffect hook
   useEffect(() => {
+    //checking if the loginData is null
     if (!loginData) {
+      //calling the googleOneTap function
       googleOneTap(options, async (response) => {
         console.log(response);
         //Ajax call to backend
         const res = await fetch("/api/google-login", {
           method: "POST",
           body: JSON.stringify({
+            //sending the id_token to backend
             token: response.credential,
           }),
           headers: {
@@ -37,6 +40,7 @@ function App() {
         });
         //getting the response from backend
         const data = await res.json();
+        //setting the loginData
         setLoginData(data);
         localStorage.setItem("loginData", JSON.stringify(data));
       });
