@@ -10,7 +10,7 @@ const port =  5000;
 const client = new OAuth2Client("114914030611-askhm7c3r7pnhp8b7rq87qbvt8ncb2sb.apps.googleusercontent.com");
 
 //setting up the express app
-const app = express();
+const app = express(); 
 
 //to parse the body of the request
 app.use(express.json());
@@ -19,6 +19,7 @@ app.use(express.json());
 const users = [];
 
 //define upsert function
+//adding the user to the users array
 function upsert(array, item) {
   const i = array.findIndex((_item) => _item.email === item.email);
   if (i > -1) array[i] = item;
